@@ -12,6 +12,7 @@ class MetricDataset:
         self.sensor = sensor
         self.version = version
         self.metric_name = metric_names[band - 1]
+        self.dataset = None
 
         self.file_path = Path(file_template.format(
             band=self.band, year=self.year, metric_name=self.metric_name))
@@ -27,10 +28,19 @@ class MetricDataset:
                     self.file_path}, probably no metric tiff file..."
             )
             return None
-        print("Dataset shape:", src.shape)
-        print("Dataset metadata:", src.meta)
-        print(f"Dataset metric transform: \n{src_transform}")
         return src_array, src_transform
+
+    def open(self):
+        """Open the raster file."""
+        if self.dataset is None or self.dataset.closed:
+            self.dataset = rio.open(self.file_path)
+        return self.dataset
+
+    def close(self):
+        """Close the raster file."""
+        if self.dataset is not None or self.dataset.open:
+            self.dataset.close()
+        return self.dataset
 
 
 class VectorDataset:
