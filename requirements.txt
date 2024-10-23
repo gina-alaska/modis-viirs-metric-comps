@@ -44,6 +44,7 @@ pytz==2024.2
 pyzmq==26.2.0
 rasterio==1.4.1
 rasterstats==0.20.0
+scipy==1.14.1
 shapely==2.0.6
 simplejson==3.19.3
 six==1.16.0
