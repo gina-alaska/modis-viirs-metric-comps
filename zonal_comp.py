@@ -1,7 +1,7 @@
 import click
 from metric_comp import MetricDataset, VectorDataset
 from metric_comp import get_zonal_stats_df
-from config import config
+from config import Config
 
 
 @click.command()
@@ -14,7 +14,7 @@ def process_zonal_stats(band, year, shapefile, id_field):
     Process zonal statistics for the given band, year, shapefile, and raster file.
     """
 
-    # config = Config()
+    config = Config()
 
     ds1 = MetricDataset(config['splt_modis_metric_path'], band,
                         year, 'modis', 'new-6', config['modis_metric_names'])
