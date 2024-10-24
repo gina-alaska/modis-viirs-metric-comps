@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 from metric_comp import compare_summary_stats
 
@@ -17,7 +18,7 @@ def format_values(df):
     return df
 
 
-def save_dataframe_as_png(df, filename, title="DataFrame"):
+def save_dataframe_as_png(df, filename: Path, title="DataFrame"):
     # Format the DataFrame values
     df = format_values(df)
 
@@ -41,12 +42,16 @@ def save_dataframe_as_png(df, filename, title="DataFrame"):
         plt.title(title, fontsize=16, loc='center')
 
     # Save the figure as PNG
-    plt.savefig(filename, bbox_inches='tight', dpi=300)
+    absolute_filename = filename.resolve()
+    plt.savefig(absolute_filename, bbox_inches='tight', dpi=300)
     plt.close()
 
 
-for i in range(12, 13):
-    df = compare_summary_stats(i, 2015, clip=True, nozeros=True)
-    save_dataframe_as_png(
-        df, f'band_{i}_2015_stats_plot.png', f'MODIS/VIIRS 2015 Band {i}')
+for i in range(8, 13):
+    try:
+        df = compare_summary_stats(i, 2015, clip=True, nozeros=True)
+        save_dataframe_as_png(
+            df, Path(f'/Users/ojlarson/Documents/modis-viirs/stats_plots/band_{i}_2015_stats_plot.png'), f'MODIS/VIIRS 2015 Band {i}')
+    except:
+        print(f'Not able to create summary stats for band {i}.')
 # save_dataframe_as_png(df, 'dataframe_image.png', title='Summary Statistics')
