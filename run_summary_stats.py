@@ -11,11 +11,15 @@ from pathlib import Path
 @click.option('-b', '--band', required=True, type=int, help='Raster band to process.')
 @click.option('-y', '--year', required=True, type=int, help='Year of the data to process.')
 @click.option('-o', '--output', required=False, type=Path, help='.csv output path.')
-@click.option('--clip', is_flag=True, help='Clip 2nd dataset to bounds of 1st dataset')
-@click.option('--nozeros', is_flag=True, help='Remove zero values from arrays prior to summarizing')
-def main(band, year, clip, nozeros, output):
-
-    result = compare_summary_stats(band, year, clip, nozeros, output)
+@click.option('--clip', is_flag=True, help='Clip 2nd dataset to bounds of 1st dataset without resampling.')
+@click.option('--resample', is_flag=True, help='Resample 2nd dataset to align with 1st dataset.')
+@click.option('--nozeros', is_flag=True, help='Remove zero values from arrays prior to summarizing.')
+def main(band, year, clip, resample, nozeros, output):
+    if clip and resample:
+        raise click.BadParameter(
+            "Only one of '--clip' or '--resample' can be used at a time.")
+    result = compare_summary_stats(
+        band, year, clip=clip, resample=resample, nozeros=nozeros, output=output)
     click.echo(result)
     return (result)
 

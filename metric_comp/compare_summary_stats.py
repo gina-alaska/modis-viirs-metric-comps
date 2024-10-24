@@ -1,5 +1,5 @@
 from metric_comp import MetricDataset
-from metric_comp import clip_raster
+from metric_comp import clip_raster, resample_raster
 from config import Config
 
 import pandas as pd
@@ -48,24 +48,28 @@ def create_summary_stats(array: np.ndarray, nozeros: bool):
     return (df)
 
 
-def compare_summary_stats(band: int, year: int, clip: bool = False, nozeros: bool = False, output: Path = None):
+def compare_summary_stats(band: int, year: int, clip: bool = False, resample: bool = False, nozeros: bool = False, output: Path = None):
     """
     Process summary statistics for the given band and year between two modis/viirs metric datasets. Uses MetricDataset class.
 
     Args:
     band (int): The band number of the desired modis/viirs metric.
     year (int): The year/snow year of the mods/viirs dataset.
-    clip (bool): If true, the 2nd dataset will be clipped to the extent of the 1st dataset.
+    clip (bool): If true, the 2nd dataset will be clipped to the extent of the 1st dataset, without resampling.
+    resample (bool): If true, the 2nd dataset will be resampled to the grid of the 1st dataset.
     nozeros (bool): If true, summary statistics will change 0 values to np.nan values to remove them from statistics.
     output (Path): A file path for a .csv file to save the dataframe output.
 
     Returns:
     combined_df (pd.dataframe): The merged dataframes, joined by statistic, for the two modis/viirs datasets.
     """
+    if clip and resample:
+        raise ValueError(
+            "Only one of 'clip' or 'resample' can be True at a time.")
 
     config = Config()
 
-    ds1 = MetricDataset(config.splt_modis_metric_path, band,
+    ds1 = MetricDataset(config.split_modis_metric_path, band,
                         year, 'modis', 'new-6', config.modis_metric_names)
 
     ds2 = MetricDataset(config.viirs_metric_path, band,
@@ -73,27 +77,33 @@ def compare_summary_stats(band: int, year: int, clip: bool = False, nozeros: boo
 
     print('Opening', ds1.file_path)
     ds1_array = ds1.load_tiff()[0]
-    print('Opening', ds2.file_path)
+
     if clip:
+        print('Opening and clipping', ds2.file_path)
         ds2_array = clip_raster(ds1, ds2)[0]
+    elif resample:
+        print('Opening and resampling', ds2.file_path)
+        ds2_array = resample_raster(ds1, ds2)[0]
     else:
+        print('Opening', ds2.file_path)
         ds2_array = ds2.load_tiff()[0]
 
     print('Creating summary statistics for', ds1.sensor)
     ds1_stats = create_summary_stats(ds1_array, nozeros)
-    print(ds1_stats.columns)
     ds1_stats = ds1_stats.rename(columns={'Value': str(ds1.sensor)})
-    print(ds1_stats.columns)
     print('Creating summary statistics for', ds2.sensor)
     ds2_stats = create_summary_stats(ds2_array, nozeros)
     ds2_stats = ds2_stats.rename(columns={'Value': str(ds2.sensor)})
     print('Merging summary statistics')
     combined_df = pd.merge(ds1_stats, ds2_stats, on='Statistic', how='outer')
     if output:
+        print(f'Saving dataframe to {output}')
         combined_df.to_csv(output)
     return combined_df
 
 
 if __name__ == '__main__':
     pd.set_option('display.float_format', '{:.2f}'.format)
-    df = compare_summary_stats(7, 2015, clip=True, nozeros=True)
+    df = compare_summary_stats(7, 2015, resample=True, nozeros=False, output=Path(
+        '/Users/ojlarson/Documents/modis-viirs/test_csv.csv'))
+    print(df)
