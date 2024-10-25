@@ -7,7 +7,7 @@ import numpy as np
 from pathlib import Path
 
 
-def create_summary_stats(array: np.ndarray, nozeros: bool):
+def create_summary_stats(array: np.ndarray, nozeros: bool = False):
     """
     Generate a pandas dataframe with summary statistics from a 1- or 2-dimensional array.
 
@@ -21,10 +21,13 @@ def create_summary_stats(array: np.ndarray, nozeros: bool):
     if nozeros:
         array = np.where(array == 0, np.nan, array)
     if len(array.shape) == 2:
-        data = pd.Series(array.flatten())
+        array = array.flatten()
+    # elif len(array.shape) ==1:
+        # data.pd.Series(array)
     elif len(array.shape) > 2:
         print('Array is greater than 2-dimensional.')
         return None
+    data = pd.Series(array.flatten())
 
     summary_stats = {
         'Statistic': ['Count', 'Min', '25th Percentile', 'Median', '75th Percentile', 'Max', 'Mean', 'Std Dev', 'Range', 'Mode'],
