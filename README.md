@@ -48,7 +48,7 @@ Options:
   --help                Show this message and exit.
   ```
 
--[run_summary_stats](run_summary_stats.py)
+- [run_summary_stats](run_summary_stats.py)
 ```
 Usage: run_summary_stats.py [OPTIONS]
 
