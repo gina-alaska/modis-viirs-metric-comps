@@ -12,6 +12,8 @@ split_modis_template = os.path.join(
 viirs_template = os.path.join(
     '{year}', 'metrics', '{metric_name}_merged_{year}.tif')
 
+default_output_path = '/Users/ojlarson/Documents/modis-viirs'
+
 
 class Config:
     base_dir = base_path
@@ -25,19 +27,4 @@ class Config:
                           'longest_css_range', 'snow_days', 'no_snow_days', 'css_segment_num', None, None, 'tot_css_days']
     modis_metric_names = ['first_snow_day', 'last_snow_day', 'fss_range', 'longest_css_first_day', 'longest_css_last_day',
                           'longest_css_day_range', 'snow_days', 'no_snow_days', 'css_segment_num', 'mflag', 'cloud_days', 'tot_css_days']
-
-
-config = {
-    'base_dir': base_path,
-    'modis_metric_path': os.path.join(base_path, modis_metrics_dir, modis_template),
-    'split_modis_metric_path': os.path.join(base_path, split_metrics_dir, split_modis_template),
-    'viirs_metric_path': os.path.join(base_path, viirs_metrics_dir, viirs_template),
-    'viirs_metric_names': [
-        'first_snow_day', 'last_snow_day', 'fss_range', 'longest_css_start', 'longest_css_end',
-        'longest_css_range', 'snow_days', 'no_snow_days', 'css_segment_num', None, None, 'tot_css_days'
-    ],
-    'modis_metric_names': [
-        'first_snow_day', 'last_snow_day', 'fss_range', 'longest_css_first_day', 'longest_css_last_day',
-        'longest_css_day_range', 'snow_days', 'no_snow_days', 'css_segment_num', 'mflag', 'cloud_days', 'tot_css_days'
-    ]
-}
+    default_output_path = default_output_path
