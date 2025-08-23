@@ -21,7 +21,7 @@ class MetricDataset:
         try:
             with rio.open(self.file_path) as src:
                 src_transform = src.transform
-                src_array = src.read(1)
+                src_array = src.read(self.band)
         except:
             print(
                 f"Cannot find {

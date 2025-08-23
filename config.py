@@ -1,26 +1,21 @@
 import os
 
 # Set path templates
-base_path = '/Users/ojlarson/Documents/modis-viirs'
-modis_metrics_dir = 'new-6'
-split_metrics_dir = 'split_metrics'
-viirs_metrics_dir = 'viirs_metrics/v1'
+base_path = '/Users/ojlarson/Documents/GINA_Projects/NPS/snow_assessment'
+modis_metrics_dir = 'modis-snow-arctic-data-center'
+viirs_metrics_dir = 'viirs-snow'
 
-modis_template = '{year}_snowyear_metrics_v006.tif'
-split_modis_template = os.path.join(
-    'band_{band}', '{year}_snowyear_metrics_v006.tif_band{band}.tif')
-viirs_template = os.path.join(
-    '{year}', 'metrics', '{metric_name}_merged_{year}.tif')
+modis_template = '{year}_MODIS_snow_metrics_v6.tif'
 
-default_output_path = '/Users/ojlarson/Documents/modis-viirs'
+viirs_template = '{year}_VIIRS_snow_metrics_v001.tif'
+
+default_output_path = '/Users/ojlarson/Documents/GINA_Projects/NPS/snow_assessment'
 
 
 class Config:
     base_dir = base_path
     modis_metric_path = os.path.join(
         base_path, modis_metrics_dir, modis_template)
-    split_modis_metric_path = os.path.join(
-        base_path, split_metrics_dir, split_modis_template)
     viirs_metric_path = os.path.join(
         base_path, viirs_metrics_dir, viirs_template)
     viirs_metric_names = ['first_snow_day', 'last_snow_day', 'fss_range', 'longest_css_start', 'longest_css_end',

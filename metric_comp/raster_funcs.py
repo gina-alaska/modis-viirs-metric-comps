@@ -36,11 +36,11 @@ def resample_raster(reference_dataset: MetricDataset, dataset: MetricDataset):
         ds1.crs, ds2.crs, ds2.width, ds2.height, *ds2.bounds)
 
     # Create an array to hold the resampled data
-    resampled_image = ds1.read(1, out_shape=(height, width))
+    resampled_image = ds1.read(dataset.band, out_shape=(height, width))
 
     # Perform the resampling
     reproject(
-        source=ds1.read(1),
+        source=ds1.read(dataset.band),
         destination=resampled_image,
         src_transform=ds1.transform,
         src_crs=ds1.crs,
