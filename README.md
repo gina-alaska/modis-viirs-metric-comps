@@ -6,27 +6,20 @@ This code builds upon methods initially developed by Hunter Barndt.
 
 ## Usage
 
-To examine and compare datasets, methods have been developed in the [metric_comp](/metric_comp) module.
+To examine and compare datasets, methods have been developed in the [metric_comps](/metric_comps) module.
 
 They can be imported into scripts and notebooks as such:
 ```python
-from metric_comp import function_name
+from metric_comps import function_name
 ```
 
 This allows these methods to be used elsewhere, for two main categories: Jupyter Notebooks in the [notebooks](/notebooks) folder, and command-line python scripts in the [root directory](/).
 
-For setting up the repository, [config.py](/config.py) can be revised to local paths, and [requirements.txt](/requirements.txt) can be used to set up an environement. One recommendation for doing so would be to use a venv:
+For setting up the repository, [config.py](/config.py) can be revised to local paths, and [environment.yml](/environment.yml) can be used to set up an environement. One recommendation for doing so would be to use a venv:
 
 ```
-$ cd path/to/modis-viirs-metric-comps
-$ python -m venv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
+$ conda env create -f environment.yml
 ```
-
-## Notebooks
-
-In the [notebooks](/notebooks) folder is a [template.ipynb](template.ipynb) file. This contains a couple of code blocks importing typically used libraries, methods from metric_comp, and sets up a few variables. Other noebooks build off of this to explore and graph various statistics.
 
 ## Command line scripts
 
@@ -61,4 +54,19 @@ Options:
   --resample          Resample 2nd dataset to align with 1st dataset.
   --nozeros           Remove zero values from arrays prior to summarizing.
   --help              Show this message and exit.
+```
+
+- [generate_plots.py](generate_plots.py)
+```
+usage: generate_plots.py [-h] [--output_dir OUTPUT_DIR] [year]
+
+Generate MODIS/VIIRS metric comparison plots.
+
+positional arguments:
+  year                  Year to process (default: 2019)
+
+options:
+  -h, --help            show this help message and exit
+  --output_dir, -o OUTPUT_DIR
+                        Directory to save output plots (default: current directory)
 ```
