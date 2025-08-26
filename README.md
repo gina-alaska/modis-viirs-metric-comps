@@ -15,7 +15,7 @@ from metric_comps import function_name
 
 This allows these methods to be used elsewhere, for two main categories: Jupyter Notebooks in the [notebooks](/notebooks) folder, and command-line python scripts in the [root directory](/).
 
-For setting up the repository, [config.py](/config.py) can be revised to local paths, and [environment.yml](/environment.yml) can be used to set up an environement. One recommendation for doing so would be to use a venv:
+For setting up the repository, [config.py](/config.py) can be revised to local paths, and [environment.yml](/environment.yml) can be used to set up an environment:
 
 ```
 $ conda env create -f environment.yml
