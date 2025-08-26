@@ -1,6 +1,6 @@
 import click
-from metric_comp import MetricDataset, VectorDataset
-from metric_comp import get_zonal_stats_df
+from metric_comps import MetricDataset, VectorDataset
+from metric_comps import get_zonal_stats_df
 from config import Config
 
 
@@ -16,10 +16,11 @@ def process_zonal_stats(band, year, shapefile, id_field):
 
     config = Config()
 
-    ds1 = MetricDataset(config['splt_modis_metric_path'], band,
-                        year, 'modis', 'new-6', config['modis_metric_names'])
-    ds2 = MetricDataset(config['viirs_metric_path'], band,
-                        year, 'viirs', 'v1', config['viirs_metric_names'])
+    ds1 = MetricDataset(config.modis_metric_path, band,
+                        year, 'modis', config.modis_version, config.modis_metric_names)
+
+    ds2 = MetricDataset(config.viirs_metric_path, band,
+                        year, 'viirs', config.viirs_version, config.viirs_metric_names)
 
     shp_ds = VectorDataset(shapefile, id_field)
 

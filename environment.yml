@@ -1,0 +1,10 @@
+name: metric-comps
+channels:
+  - conda-forge
+dependencies:
+  - rasterio
+  - geopandas
+  - rasterstats
+  - matplotlib
+  - fiona
+  - ipykernel

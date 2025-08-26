@@ -1,5 +1,5 @@
-from metric_comp import MetricDataset
-from metric_comp import clip_raster, resample_raster
+from metric_comps import MetricDataset
+from metric_comps import clip_raster, resample_raster
 from config import Config
 
 import pandas as pd
@@ -72,11 +72,11 @@ def compare_summary_stats(band: int, year: int, clip: bool = False, resample: bo
 
     config = Config()
 
-    ds1 = MetricDataset(config.split_modis_metric_path, band,
-                        year, 'modis', 'new-6', config.modis_metric_names)
+    ds1 = MetricDataset(config.modis_metric_path, band,
+                        year, 'modis', config.modis_version, config.modis_metric_names)
 
     ds2 = MetricDataset(config.viirs_metric_path, band,
-                        year, 'viirs', 'v1', config.viirs_metric_names)
+                        year, 'viirs', config.viirs_version, config.viirs_metric_names)
 
     print('Opening', ds1.file_path)
     ds1_array = ds1.load_tiff()[0]

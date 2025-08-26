@@ -1,9 +1,7 @@
 from rasterstats import zonal_stats
 import pandas as pd
-from metric_comp.additional_stats import additional_statistics_functions
 
-
-def get_zonal_stats_df(ds1, ds2, shp_ds, additional_statistics_functions=additional_statistics_functions):
+def get_zonal_stats_df(ds1, ds2, shp_ds):
     """
     Uses rasterstats.zonal_stats to compute statistics for a given polygon dataset from two modis/viirs MetricDatasets.
 
@@ -19,10 +17,8 @@ def get_zonal_stats_df(ds1, ds2, shp_ds, additional_statistics_functions=additio
         print(f"At least one of the two datasets did not open.")
         return None
     shp = shp_ds.load_shp()
-    ds1_stats = zonal_stats(shp, ds1_array, affine=ds1_transform,
-                            add_stats=additional_statistics_functions, nodata=0)
-    ds2_stats = zonal_stats(shp, ds2_array, affine=ds2_transform,
-                            add_stats=additional_statistics_functions, nodata=0)
+    ds1_stats = zonal_stats(shp, ds1_array, affine=ds1_transform, nodata=0)
+    ds2_stats = zonal_stats(shp, ds2_array, affine=ds2_transform, nodata=0)
     ds1_stats_df = pd.DataFrame(ds1_stats)
     ds1_stats_df['shapefile'] = shp_ds.file_name
     ds1_stats_df['zone'] = shp[shp_ds.id_field]

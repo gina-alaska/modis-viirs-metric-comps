@@ -1,5 +1,5 @@
 import click
-from metric_comp import compare_summary_stats
+from metric_comps import compare_summary_stats
 from config import Config
 
 import pandas as pd

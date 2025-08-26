@@ -1,5 +1,5 @@
 import rasterio as rio
-from metric_comp import MetricDataset
+from metric_comps import MetricDataset
 from rasterio.mask import mask
 from rasterio.warp import calculate_default_transform, reproject, Resampling
 from rasterio.io import MemoryFile

@@ -15,7 +15,9 @@ class MetricDataset:
         self.dataset = None
 
         self.file_path = Path(file_template.format(
-            band=self.band, year=self.year, metric_name=self.metric_name))
+            band=self.band, year=self.year,
+            metric_name=self.metric_name,
+            version=self.version,))
 
     def load_tiff(self):
         try:
