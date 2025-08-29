@@ -1,6 +1,7 @@
 from rasterstats import zonal_stats
 import pandas as pd
 
+
 def get_zonal_stats_df(ds1, ds2, shp_ds):
     """
     Uses rasterstats.zonal_stats to compute statistics for a given polygon dataset from two modis/viirs MetricDatasets.
@@ -20,14 +21,14 @@ def get_zonal_stats_df(ds1, ds2, shp_ds):
     ds1_stats = zonal_stats(shp, ds1_array, affine=ds1_transform, nodata=0)
     ds2_stats = zonal_stats(shp, ds2_array, affine=ds2_transform, nodata=0)
     ds1_stats_df = pd.DataFrame(ds1_stats)
-    ds1_stats_df['shapefile'] = shp_ds.file_name
-    ds1_stats_df['zone'] = shp[shp_ds.id_field]
+    ds1_stats_df["shapefile"] = shp_ds.file_name
+    ds1_stats_df["zone"] = shp[shp_ds.id_field]
     ds2_stats_df = pd.DataFrame(ds2_stats)
-    ds2_stats_df['shapefile'] = shp_ds.file_name
-    ds2_stats_df['zone'] = shp[shp_ds.id_field]
-    ds1_stats_df['sensor'] = ds1.sensor
-    ds1_stats_df['version'] = ds1.version
-    ds2_stats_df['sensor'] = ds2.sensor
-    ds2_stats_df['version'] = ds2.version
+    ds2_stats_df["shapefile"] = shp_ds.file_name
+    ds2_stats_df["zone"] = shp[shp_ds.id_field]
+    ds1_stats_df["sensor"] = ds1.sensor
+    ds1_stats_df["version"] = ds1.version
+    ds2_stats_df["sensor"] = ds2.sensor
+    ds2_stats_df["version"] = ds2.version
     combined_stats = pd.concat([ds1_stats_df, ds2_stats_df])
     return combined_stats

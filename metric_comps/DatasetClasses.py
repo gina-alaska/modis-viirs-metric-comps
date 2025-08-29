@@ -14,10 +14,14 @@ class MetricDataset:
         self.metric_name = metric_names[band - 1]
         self.dataset = None
 
-        self.file_path = Path(file_template.format(
-            band=self.band, year=self.year,
-            metric_name=self.metric_name,
-            version=self.version,))
+        self.file_path = Path(
+            file_template.format(
+                band=self.band,
+                year=self.year,
+                metric_name=self.metric_name,
+                version=self.version,
+            )
+        )
 
     def load_tiff(self):
         try:
@@ -55,8 +59,8 @@ class VectorDataset:
         try:
             gdf = gpd.read_file(self.file_path)
         except:
-            print('Error loading shapefile')
+            print("Error loading shapefile")
             return False
         if self.id_field not in gdf.columns:
-            print('ID field not in columns')
+            print("ID field not in columns")
         return gdf

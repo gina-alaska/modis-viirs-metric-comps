@@ -12,10 +12,10 @@ params = {
     "centralTendencyType": "NONE",
     "returnFlags": "false",
     "returnOriginalValues": "false",
-    "returnSuspectData": "false"
+    "returnSuspectData": "false",
 }
 
-full_url = requests.Request('GET', base_url, params=params).prepare().url
+full_url = requests.Request("GET", base_url, params=params).prepare().url
 print("Requesting URL:")
 print(full_url)
 
@@ -29,12 +29,14 @@ if response.status_code == 200:
         for entry in station["data"]:
             element_code = entry["stationElement"]["elementCode"]
             for value in entry["values"]:
-                records.append({
-                    "stationTriplet": station_id,
-                    "elementCode": element_code,
-                    "date": value["date"],
-                    "value": value["value"]
-                })
+                records.append(
+                    {
+                        "stationTriplet": station_id,
+                        "elementCode": element_code,
+                        "date": value["date"],
+                        "value": value["value"],
+                    }
+                )
 
     df = pd.DataFrame(records)
     print(df.head())

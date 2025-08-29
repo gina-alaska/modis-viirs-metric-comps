@@ -12,13 +12,15 @@ def clip_raster(bounding_dataset: MetricDataset, dataset: MetricDataset):
     ds1.close()
     bbox_geom = {
         "type": "Polygon",
-        "coordinates": [[
-            [bounds.left, bounds.bottom],
-            [bounds.left, bounds.top],
-            [bounds.right, bounds.top],
-            [bounds.right, bounds.bottom],
-            [bounds.left, bounds.bottom]
-        ]]
+        "coordinates": [
+            [
+                [bounds.left, bounds.bottom],
+                [bounds.left, bounds.top],
+                [bounds.right, bounds.top],
+                [bounds.right, bounds.bottom],
+                [bounds.left, bounds.bottom],
+            ]
+        ],
     }
 
     clipped_image, clipped_transform = mask(ds2, [bbox_geom], crop=True)
@@ -33,7 +35,8 @@ def resample_raster(reference_dataset: MetricDataset, dataset: MetricDataset):
     # Get the transform, width, and height from the ds2erence raster
     # Get the transform, width, and height from the ds2erence raster
     transform, width, height = calculate_default_transform(
-        ds1.crs, ds2.crs, ds2.width, ds2.height, *ds2.bounds)
+        ds1.crs, ds2.crs, ds2.width, ds2.height, *ds2.bounds
+    )
 
     # Create an array to hold the resampled data
     resampled_image = ds1.read(dataset.band, out_shape=(height, width))
@@ -46,7 +49,7 @@ def resample_raster(reference_dataset: MetricDataset, dataset: MetricDataset):
         src_crs=ds1.crs,
         dst_transform=transform,
         dst_crs=ds2.crs,
-        resampling=Resampling.nearest  # Adjust resampling method if needed
+        resampling=Resampling.nearest,  # Adjust resampling method if needed
     )
     ds1.close()
     ds2.close()

@@ -23,15 +23,26 @@ def create_summary_stats(array: np.ndarray, nozeros: bool = False):
     if len(array.shape) == 2:
         array = array.flatten()
     # elif len(array.shape) ==1:
-        # data.pd.Series(array)
+    # data.pd.Series(array)
     elif len(array.shape) > 2:
-        print('Array is greater than 2-dimensional.')
+        print("Array is greater than 2-dimensional.")
         return None
     data = pd.Series(array.flatten())
 
     summary_stats = {
-        'Statistic': ['Count', 'Min', '25th Percentile', 'Median', '75th Percentile', 'Max', 'Mean', 'Std Dev', 'Range', 'Mode'],
-        'Value': [
+        "Statistic": [
+            "Count",
+            "Min",
+            "25th Percentile",
+            "Median",
+            "75th Percentile",
+            "Max",
+            "Mean",
+            "Std Dev",
+            "Range",
+            "Mode",
+        ],
+        "Value": [
             data.count(),
             data.min(),
             data.quantile(0.25),
@@ -41,17 +52,25 @@ def create_summary_stats(array: np.ndarray, nozeros: bool = False):
             data.mean(),
             data.std(),
             data.max() - data.min(),
-            data.mode()[0]
-        ]
+            data.mode()[0],
+        ],
     }
 
-    df = pd.DataFrame(summary_stats, columns=['Statistic', 'Value'])
-    df['Statistic'] = pd.Categorical(
-        df['Statistic'], categories=summary_stats['Statistic'], ordered=True)
-    return (df)
+    df = pd.DataFrame(summary_stats, columns=["Statistic", "Value"])
+    df["Statistic"] = pd.Categorical(
+        df["Statistic"], categories=summary_stats["Statistic"], ordered=True
+    )
+    return df
 
 
-def compare_summary_stats(band: int, year: int, clip: bool = False, resample: bool = False, nozeros: bool = False, output: Path = None):
+def compare_summary_stats(
+    band: int,
+    year: int,
+    clip: bool = False,
+    resample: bool = False,
+    nozeros: bool = False,
+    output: Path = None,
+):
     """
     Process summary statistics for the given band and year between two modis/viirs metric datasets. Uses MetricDataset class.
 
@@ -67,46 +86,62 @@ def compare_summary_stats(band: int, year: int, clip: bool = False, resample: bo
     combined_df (pd.dataframe): The merged dataframes, joined by statistic, for the two modis/viirs datasets.
     """
     if clip and resample:
-        raise ValueError(
-            "Only one of 'clip' or 'resample' can be True at a time.")
+        raise ValueError("Only one of 'clip' or 'resample' can be True at a time.")
 
     config = Config()
 
-    ds1 = MetricDataset(config.modis_metric_path, band,
-                        year, 'modis', config.modis_version, config.modis_metric_names)
+    ds1 = MetricDataset(
+        config.modis_metric_path,
+        band,
+        year,
+        "modis",
+        config.modis_version,
+        config.modis_metric_names,
+    )
 
-    ds2 = MetricDataset(config.viirs_metric_path, band,
-                        year, 'viirs', config.viirs_version, config.viirs_metric_names)
+    ds2 = MetricDataset(
+        config.viirs_metric_path,
+        band,
+        year,
+        "viirs",
+        config.viirs_version,
+        config.viirs_metric_names,
+    )
 
-    print('Opening', ds1.file_path)
+    print("Opening", ds1.file_path)
     ds1_array = ds1.load_tiff()[0]
 
     if clip:
-        print('Opening and clipping', ds2.file_path)
+        print("Opening and clipping", ds2.file_path)
         ds2_array = clip_raster(ds1, ds2)[0]
     elif resample:
-        print('Opening and resampling', ds2.file_path)
+        print("Opening and resampling", ds2.file_path)
         ds2_array = resample_raster(ds1, ds2)[0]
     else:
-        print('Opening', ds2.file_path)
+        print("Opening", ds2.file_path)
         ds2_array = ds2.load_tiff()[0]
 
-    print('Creating summary statistics for', ds1.sensor)
+    print("Creating summary statistics for", ds1.sensor)
     ds1_stats = create_summary_stats(ds1_array, nozeros)
-    ds1_stats = ds1_stats.rename(columns={'Value': str(ds1.sensor)})
-    print('Creating summary statistics for', ds2.sensor)
+    ds1_stats = ds1_stats.rename(columns={"Value": str(ds1.sensor)})
+    print("Creating summary statistics for", ds2.sensor)
     ds2_stats = create_summary_stats(ds2_array, nozeros)
-    ds2_stats = ds2_stats.rename(columns={'Value': str(ds2.sensor)})
-    print('Merging summary statistics')
-    combined_df = pd.merge(ds1_stats, ds2_stats, on='Statistic', how='outer')
+    ds2_stats = ds2_stats.rename(columns={"Value": str(ds2.sensor)})
+    print("Merging summary statistics")
+    combined_df = pd.merge(ds1_stats, ds2_stats, on="Statistic", how="outer")
     if output:
-        print(f'Saving dataframe to {output}')
+        print(f"Saving dataframe to {output}")
         combined_df.to_csv(output)
     return combined_df
 
 
-if __name__ == '__main__':
-    pd.set_option('display.float_format', '{:.2f}'.format)
-    df = compare_summary_stats(7, 2015, resample=True, nozeros=False, output=Path(
-        '/Users/ojlarson/Documents/modis-viirs/test_csv.csv'))
+if __name__ == "__main__":
+    pd.set_option("display.float_format", "{:.2f}".format)
+    df = compare_summary_stats(
+        7,
+        2015,
+        resample=True,
+        nozeros=False,
+        output=Path("/Users/ojlarson/Documents/modis-viirs/test_csv.csv"),
+    )
     print(df)
